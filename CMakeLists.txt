@@ -57,6 +57,7 @@ cpr_option(CURL_VERBOSE_LOGGING "Curl verbose logging during building curl" OFF)
 cpr_option(CPR_USE_SYSTEM_GTEST "If ON, this project will look in the system paths for an installed gtest library. If none is found it will use the built-in one." OFF)
 cpr_option(CPR_USE_SYSTEM_CURL "If enabled we will use the curl lib already installed on this system." OFF)
 cpr_option(CPR_ENABLE_CURL_HTTP_ONLY "If enabled we will only use the HTTP/HTTPS protocols from CURL. If disabled, all the CURL protocols are enabled. This is useful if your project uses libcurl and you need support for other CURL features e.g. sending emails." ON)
+cpr_option(CPR_DISABLE_CURL_NGHTTP2 "If enabled, we will not use the NG_HTTP2 Libraries when building CURL" OFF)
 cpr_option(CPR_ENABLE_SSL "Enables or disables the SSL backend. Required to perform HTTPS requests." ON)
 cpr_option(CPR_FORCE_OPENSSL_BACKEND "Force to use the OpenSSL backend. If CPR_FORCE_OPENSSL_BACKEND, CPR_FORCE_DARWINSSL_BACKEND, CPR_FORCE_MBEDTLS_BACKEND, and CPR_FORCE_WINSSL_BACKEND are set to to OFF, cpr will try to automatically detect the best available SSL backend (WinSSL - Windows, OpenSSL - Linux, DarwinSSL - Mac ...)." OFF)
 cpr_option(CPR_FORCE_WINSSL_BACKEND "Force to use the WinSSL backend. If CPR_FORCE_OPENSSL_BACKEND, CPR_FORCE_DARWINSSL_BACKEND, CPR_FORCE_MBEDTLS_BACKEND, and CPR_FORCE_WINSSL_BACKEND are set to to OFF, cpr will try to automatically detect the best available SSL backend (WinSSL - Windows, OpenSSL - Linux, DarwinSSL - Mac ...)." OFF)
@@ -235,6 +236,12 @@ else()
         # We only need HTTP (and HTTPS) support:
         set(HTTP_ONLY ON CACHE INTERNAL "" FORCE)
     endif()
+
+    if (CPR_DISABLE_CURL_NGHTTP2)
+        # We dont want NG_HTTP2 support:
+        set(USE_NGHTTP2 OFF CACHE INTERNAL "" FORCE)
+    endif()
+        
     set(BUILD_CURL_EXE OFF CACHE INTERNAL "" FORCE)
     set(BUILD_TESTING OFF)
 
